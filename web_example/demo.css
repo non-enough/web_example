@@ -1,0 +1,66 @@
+body{
+ margin: 0;
+}
+.요소{
+  padding: 0 270px;
+  width: 1000px;
+}
+h1 {
+  color: white;
+  background-color: black;
+  width: 1277px;
+  margin: 0;
+  padding: 30px 0 30px 300px;
+}
+.table,
+.form,
+.list{
+  border: 1px solid grey;
+  float: left; width: 300px;
+  text-align: center;
+  margin: 30px 10px;
+  padding-top: 10px;;
+  height: 30px;
+}
+
+h2{
+width: 120px;
+padding-top: 150px;
+}
+
+.underline{
+  border: 1px solid black;
+  padding-right: 270px;
+}
+
+.box1,
+.box3,
+.box5 {
+  border: 1px solid grey;
+  width: auto;
+  background-color: #8080808c;
+  padding : 15px 0 0 25px;;
+  margin-top : 30px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.box2,
+.box4,
+.box6 {
+  border: 1px solid grey;
+  width: auto;
+  height: 70px;
+  padding : 35px 0 0 50px;;
+}
+
+footer{
+  border-top: 1px solid grey;
+  margin-top: 30px;
+  text-align: center;
+  padding: 20px 0 60px 0;
+}
+
+.address{
+  color: grey;
+}
