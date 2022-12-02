@@ -1,0 +1,54 @@
+USE Practice;
+
+DROP TABLE 회원테이블;
+
+CREATE TABLE 회원테이블(
+회원번호 INT PRIMARY KEY,
+이름 VARCHAR(20),
+가입일자 DATE NOT NULL,
+수신동의 BIT
+);
+SELECT * FROM 회원테이블;
+-- 트랜젝션 실행
+BEGIN;
+
+INSERT INTO 회원테이블 VALUES (1001, '홍길동', '2020-01-02',1);
+
+SELECT * FROM 회원테이블;
+
+ROLLBACK;
+
+SELECT * FROM 회원테이블;
+
+BEGIN;
+INSERT INTO 회원테이블 VALUES (1001, '홍길동','2020-01-02',1);
+COMMIT;
+SELECT * FROM 회원테이블;
+
+-- 회원테이블에 데이터 존재할 시, 데이터 모두 삭제
+DELETE FROM 회원테이블;
+
+SELECT * FROM 회원테이블;
+
+BEGIN;
+INSERT INTO 회원테이블 VALUES (1001, '홍길동','2020-01-02',1);
+SAVEPOINT S1;
+
+UPDATE 회원테이블
+SET 이름 = '이순신';
+
+SAVEPOINT S2;
+
+DELETE FROM 회원테이블;
+
+SAVEPOINT S3;
+
+SELECT * FROM 회원테이블;
+
+ROLLBACK TO S2;
+
+SELECT * FROM 회원테이블;
+
+ROLLBACK TO S1;
+ROLLBACK TO S2;
+COMMIT;

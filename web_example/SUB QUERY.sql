@@ -1,0 +1,124 @@
+use practice;
+
+-- SELECT문 서브 쿼리
+-- SELECT 명령문 안에 SELECT 명령문
+SELECT  *
+		,(SELECT GENDER FROM CUSTOMER WHERE A.MEM_NO = MEM_NO) AS GENDER
+  FROM SALES AS A;
+  
+SELECT  *
+  FROM CUSTOMER
+ WHERE MEM_NO = '1000970';
+ -- -------------------------------- 처리 속도 비교 ---------------------------
+SELECT  A. *
+		 ,B. ORDER_NO
+  FROM CUSTOMER AS A
+ INNER
+  JOIN SALES AS B
+    ON A.MEM_NO = B.MEM_NO;
+    
+-- FROM 서브 쿼리
+-- FROM 명령문 안에 SELECT 명령문
+SELECT  *
+  FROM  (
+		 SELECT MEM_NO
+				, COUNT(ORDER_NO) AS 주문횟수
+		   FROM SALES
+		  GROUP
+             BY MEM_NO
+		) AS A;
+-- FROM절 서브 쿼리 : 열 및 테이블명 지정        
+
+-- WHERE절 서브 쿼리
+-- WHERE 명령문 안에 SELECT 명령문
+SELECT  COUNT(ORDER_NO) AS 주문횟수
+  FROM  SALES
+ WHERE  MEM_NO IN (SELECT MEM_NO FROM CUSTOMER WHERE YEAR(JOIN_DATE) = 2019);
+ 
+SELECT  *
+		, YEAR(JOIN_DATE)
+  FROM  CUSTOMER;
+  
+SELECT  MEM_NO FROM CUSTOMER WHERE YEAR(JOIN_DATE) = 2019;
+
+SELECT  COUNT(ORDER_NO) AS 주문횟수
+  FROM SALES
+ WHERE MEM_NO IN('1000001', '1000002', '1000004', '1000005', '1000006', '1000010', '1000011', '1000012', '1000013', '1000014', '1000015', '1000019', '1000020', '1000021', '1000022', '1000023', '1000024', '1000025', '1000026', '1000027', '1000045', '1000046', '1000047', '1000048', '1000055', '1000056', '1000057', '1000058', '1000059', '1000060', '1000061', '1000062', '1000066', '1000067', '1000068', '1000069', '1000070', '1000071', '1000072', '1000073', '1000074', '1000075', '1000076', '1000077'
+,'1000078','1000079');
+
+-- WHERE 절 서브 쿼리 VS 데이터 결합(JOIN) 결과 값 비교
+SELECT  COUNT(ORDER_NO) AS 주문횟수
+  FROM  SALES AS A
+ INNER
+  JOIN  CUSTOMER AS B
+    ON  A.MEM_NO = B.MEM_NO
+ WHERE YEAR(JOIN_DATE) = '2019';
+ 
+ 
+-- 서브 쿼리 + 테이블 결합(JOIN)
+CREATE TEMPORARY TABLE SALES_SUB_QUERY
+SELECT  A.구매횟수
+		 ,B.*
+  FROM  (SELECT  MEM_NO
+				, COUNT(ORDER_NO) AS 구매횟수
+		   FROM  SALES
+		  group
+             BY MEM_NO
+		 ) AS A
+ INNER
+  JOIN CUSTOMER AS B
+    ON A.MEM_NO = B.MEM_NO;
+    
+SELECT  *  FROM SALES_SUB_QUERY;
+
+/* 성별이 남성 조건으로 필터링하여 */
+SELECT  *
+  FROM  SALES_SUB_QUERY
+ WHERE  GENDER = 'MAN';
+
+
+/* 거주지역별로 구매횟수 집계 */
+SELECT  ADDR
+		,SUM(구매횟수) AS 구매횟수
+  FROM  SALES_SUB_QUERY
+ WHERE  GENDER = 'MAN'
+ GROUP
+    BY  ADDR;
+
+
+/* 구매횟수 100회 미만 조건으로 필터링 */
+SELECT  ADDR
+		,SUM(구매횟수) AS 구매횟수
+  FROM  SALES_SUB_QUERY
+ WHERE  GENDER = 'MAN'
+ GROUP
+    BY  ADDR
+HAVING  SUM(구매횟수) < 100;
+
+
+/* 모든 열 조회 */
+/* 구매횟수가 낮은 순으로 */
+SELECT  ADDR
+		,SUM(구매횟수) AS 구매횟수
+  FROM  SALES_SUB_QUERY
+ WHERE  GENDER = 'MAN'
+ GROUP
+    BY  ADDR
+HAVING  SUM(구매횟수) < 100
+ ORDER
+    BY  SUM(구매횟수) ASC; 
+ 
+ 
+/***************FROM절 서브 쿼리(Sub Query) 작성법***************/
+SELECT  A.구매횟수
+		,B.*
+  FROM  (
+		SELECT  MEM_NO
+				,COUNT(ORDER_NO) AS 구매횟수
+          FROM  SALES
+		 GROUP
+            BY  MEM_NO
+		)AS A
+ INNER
+  JOIN  CUSTOMER AS B
+    ON  A.MEM_NO = B.MEM_NO;
